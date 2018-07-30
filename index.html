@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>DM Dash</title>
+    <link rel="stylesheet" href="assets/css/main.css" type="text/css">
+    <link rel="stylesheet" href="assets/css/bootstrap.css" type="text/css">
+    <link href="assets/icons/css/materialdesignicons.min.css" media="all" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div class="dashboard row">
+      <div class="col-md-4">
+        <div class="story game-card">
+          <div class="heading">
+            <i id="chapter-back" class="mdi mdi-chevron-double-left"></i>
+            <p class="lead" id="story-title"> The Beginning </p>
+            <i id="chapter-forward" class="mdi mdi-chevron-double-right"></i>
+          </div>
+          <div class="progress-container">
+            <div class="progress">
+              <div id="story-progress-bar" class="progress-bar bg-success" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="content">
+            <div class="text-content" id="story-container">
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8"></div>
+    </div>
+    <script src="assets/js/markdown.js"></script>
+    <script src="assets/js/story.js"></script>
+    <script src="assets/js/watched.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

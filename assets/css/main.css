@@ -1,0 +1,67 @@
+h1,h2,h3,h4,h5,h6 {
+  margin: 0px !important;
+}
+.dashboard {
+  height: 100vh;
+}
+.game-card {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  margin: 1rem;
+  height: calc(100% - 2rem);
+  width: calc(100% - 2rem);
+  border-radius: 10px;
+}
+.story .heading {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: row;
+}
+.story .heading p {
+  width: 50%;
+  text-align: center;
+  margin-bottom: 0px;
+}
+.story .heading i {
+  font-size: 1.8rem;
+  color: #777;
+  cursor: pointer;
+}
+.game-card .heading i:hover {
+  color: black;
+}
+.story .progress-container {
+  height: 5%;
+}
+.story .progress{
+  margin-left: 1rem;
+  height: 0.3rem;
+  margin-right: 1rem;
+}
+.story .content {
+  width: 100%;
+  height: calc(100% - 15%);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.story .text-content {
+  margin-right: 1rem;
+  margin-left: 1rem;
+  padding: 1rem;
+  border: 2px #EBEBEB solid;
+  height: calc(100% - 1rem);
+  max-height: calc(100%);
+  border-radius: 10px;
+  background-color: #FAFAFA;
+  overflow-y: scroll;
+  color: #777;
+}
+
+.story .text-content blockquote {
+  margin: 0;
+  margin-top: 0.2rem;
+  border-left: 5px solid #EBEBEB;
+  padding-left: 1rem;
+}
