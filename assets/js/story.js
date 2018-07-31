@@ -14,6 +14,8 @@ let storyRaw = {
         [brad]     "woah! I love you!"
         [nina]  "no way hozay!"
         ---
+        If the bard minds his own buisness go to chapter 2 <2>
+        If the bard seduces cause of course he does, go to chapter 3 <3>
         `
 
       },
@@ -21,6 +23,10 @@ let storyRaw = {
         title: "The Middle",
         raw: `[Nina] attacked [brad], using [mario]
         [mario]"HIYAH!"`
+      },
+      {
+        title: "The End",
+        raw: `You all die. Honestly what the _fuck_`
       }
     ]
   }

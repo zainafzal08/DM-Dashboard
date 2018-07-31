@@ -6,7 +6,7 @@ function renderStory() {
     let title = document.getElementById("story-title")
     let pb = document.getElementById("story-progress-bar")
     container.innerHTML= markdown(chapter.raw,story)
-    title.innerText = chapter.title
+    title.innerText = (story.currentChapter+1) + ". " +chapter.title
     pb.style.width = (((story.currentChapter+1)/story.chapters.length)*100)+"%"
 }
 

@@ -14,9 +14,9 @@ This is a card that displays the current story notes, you can skip forward and b
 
 You can edit it live as your players ruin your story by clicking on the pencil icon. A modal will pop up allowing you to make edits and then save.
 
-> Dice Card
+> Command Card
 
-This is a card with a set of dice you can roll to do various checks that arn't player related.
+This is a card where you can run commands such as rolling a set of dice to do a set of checks.
 
 > NPC Card
 
@@ -103,3 +103,9 @@ The cool thing is now if you have any dialouge it get's automatically highlighte
 That is the charater name in square brackets, followed by the dialouge in double quotes.
 
 You can change these colors from the default on the edit story screen.
+
+Lastly if you want to have something such as "if the team makes decision A go to chapter 1 else go to chapter 4" you can use chapter links.
+
+```
+this is a chapter link to chapter 2 right here <2>
+```
