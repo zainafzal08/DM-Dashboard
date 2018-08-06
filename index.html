@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>DM Dash</title>
     <link rel="stylesheet" href="assets/css/main.css" type="text/css">
+    <link rel="stylesheet" href="assets/css/balloon.css" type="text/css">
     <link rel="stylesheet" href="assets/css/bootstrap.css" type="text/css">
     <link href="assets/icons/css/materialdesignicons.min.css" media="all" rel="stylesheet" type="text/css">
   </head>
@@ -28,12 +29,33 @@
         </div>
       </div>
       <div class="col-md-8">
-        <div class="main-focus row"></div>
+        <div class="main-focus row">
+          <div class="col-md-4">
+            <div id="character-left"  class="game-card character-card" style="display: none;">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div id="character-middle"  class="game-card character-card middle-card" style="display: none"></div>
+          </div>
+          <div class="col-md-4">
+            <div id="character-right"  class="game-card character-card"  style="display: none"></div>
+          </div>
+        </div>
+        <div class="mid-focus row">
+          <div class="tool-bar">
+            <button class="tool bg-warning">Swap Characters</button>
+            <button class="tool bg-danger">Start Battle</button>
+            <button class="tool bg-info">Console Help</button>
+            <button class="tool bg-success">Generate NPC</button>
+          </div>
+        </div>
         <div class="sub-focus row">
-          <div class="game-card command">
+          <div class="command">
             <div class="terminal">
-              <div class="output"></div>
-              <div class="input"></div>
+              <div class="output" id="terminal-output"></div>
+              <div class="input">
+                <input type="text" id="terminal-input"></input>
+              </div>
             </div>
           </div>
         </div>
@@ -41,6 +63,7 @@
     </div>
     <script src="assets/js/markdown.js"></script>
     <script src="assets/js/story.js"></script>
+    <script src="assets/js/characters.js"></script>
     <script src="assets/js/watched.js"></script>
     <script src="assets/js/main.js"></script>
   </body>

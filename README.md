@@ -2,6 +2,20 @@
 
 A wonderful site to help you DM better!
 
+>TODO
+
+0. finish character cards
+0.5. left right arrow character cycle
+1. story live editing
+2. look up command
+3. command buttons
+4. edit character / view full card
+5. You can change these colors of characters from story eidt screen
+6. chapter links have a tool tip
+7. battle mode
+8. clean up style/refactor (use format strings + semicolons)
+9. improved watched interface
+
 ### Playing
 ##### Adventure Phase
 
@@ -17,6 +31,16 @@ You can edit it live as your players ruin your story by clicking on the pencil i
 > Command Card
 
 This is a card where you can run commands such as rolling a set of dice to do a set of checks.
+the following commands are supported
+
+| Command | Description | Example |
+| ------- | ----------- | ------- |
+| `help` | opens the console help diaouge |  `help` |
+| `clear` | clears console | `clear` |
+| `roll` or `r` | rolls a set of dice | `roll 5 d10` |
+| `look up` | looks a spell or item up and displays info | `look up zone of truth`
+
+Note you can navigate history via the up and and down arrows ;)
 
 > NPC Card
 
@@ -31,12 +55,6 @@ You can also click on the plus icon to generate a random NPC card who you can tw
 This is identical to the NPC card but details various enemies not in battle.
 
 You can also generate enemies on the fly in the same way.
-
-> Battle card
-
-This is a card to let you start a battle and shift the dashboard into the battle phase. It takes in a initiative roll for all players who are involved (if a player is not involved don't give them a roll and they won't be put into the battle)
-
-It also asks you to specify which enemies are involved. It will automatically roll initiative and put them into the order.
 
 ##### Battle phase
 
