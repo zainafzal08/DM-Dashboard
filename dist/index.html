@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>DM Dash</title>
+    <link rel="stylesheet" href="assets/css/main.css" type="text/css">
+    <link rel="stylesheet" href="assets/css/balloon.css" type="text/css">
+    <link rel="stylesheet" href="assets/css/bootstrap.css" type="text/css">
+    <link href="assets/icons/css/materialdesignicons.min.css" media="all" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div class="dashboard row">
+      <div class="col-md-4">
+        <div class="story game-card">
+          <div class="heading">
+            <i id="chapter-back" class="mdi mdi-chevron-double-left"></i>
+            <p class="lead" id="story-title"> The Beginning </p>
+            <i id="chapter-forward" class="mdi mdi-chevron-double-right"></i>
+          </div>
+          <div class="progress-container">
+            <div class="progress">
+              <div id="story-progress-bar" class="progress-bar bg-success" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="content">
+            <div class="text-content" id="story-container"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="main-focus row">
+          <div class="col-md-4">
+            <div id="character-left"  class="game-card character-card" style="display: none;">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div id="character-middle"  class="game-card character-card middle-card" style="display: none"></div>
+          </div>
+          <div class="col-md-4">
+            <div id="character-right"  class="game-card character-card"  style="display: none"></div>
+          </div>
+        </div>
+        <div class="mid-focus row">
+          <div class="tool-bar">
+            <button class="tool bg-warning">Swap Characters</button>
+            <button class="tool bg-danger">Start Battle</button>
+            <button class="tool bg-info">Console Help</button>
+            <button class="tool bg-success">Generate NPC</button>
+          </div>
+        </div>
+        <div class="sub-focus row">
+          <div class="command">
+            <div class="terminal">
+              <div class="output" id="terminal-output"></div>
+              <div class="input">
+                <input type="text" id="terminal-input"></input>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="assets/js/markdown.js"></script>
+    <script src="assets/js/story.js"></script>
+    <script src="assets/js/watched.js"></script>
+    <script src="assets/js/characters_data.js"></script>
+    <script src="assets/js/Characters.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>
