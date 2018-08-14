@@ -20,7 +20,8 @@ function VDN(tagName) {
         this.style.height = h
         return this
     },
-    setMargin(left="0rem",right="0rem",top="0rem",bottom="0rem") {
+
+    setMargin({left,right,top,bottom} = {left: "0rem",right: "0rem",top: "0rem",bottom: "0rem"}) {
       this.style.marginLeft = left
       this.style.marginRight = right
       this.style.marginTop = top
@@ -31,13 +32,14 @@ function VDN(tagName) {
       this.children.push(c)
       return this
     },
-    addText(tag,text,className="",size="1rem") {
-      t = VDN(tag)
-      t.root.innerHTML = text
-      t.style.fontSize = size
-      t.root.className = className
-      this.addChild(t)
-      return this
+    addText(tag,text,className,size) {
+      let t = VDN(tag);
+      t.root.innerHTML = text;
+      t.style.fontSize = size;
+      t.root.className = className;
+      t.style.margin = "0px";
+      this.addChild(t);
+      return this;
     },
     render() {
       let e = document.createElement(this.tag)
@@ -47,14 +49,14 @@ function VDN(tagName) {
         e.style[k]=this.style[k]
       for (let k in this.root)
         e[k]=this.root[k]
-      for (let child in this.children)
+      for (let child of this.children)
         e.appendChild(child.render())
       return e
     }
   }
 }
 
-function makeDivVDN(className="") {
+function makeDivVDN({className} = {className:""}) {
   let d = VDN("div")
   d.root.className = className
   return d
