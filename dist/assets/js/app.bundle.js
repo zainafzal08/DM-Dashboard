@@ -569,7 +569,7 @@ var Terminal = function () {
     this.output = outputAnchor;
     this.input = inputAnchor;
     this.scrollPos = 0;
-    this.commands = [[/roll (\d+) d(\d+)/, this.rollDice], [/r (\d+) d(\d+)/, this.rollDice], [/clear/, this.clear]];
+    this.commands = [[/roll (\d+) d(\d+)/, this.rollDice], [/r (\d+) d(\d+)/, this.rollDice], [/clear/, this.clear], [/test (.*)/, this.testCommand]];
     this.pos = null;
     this.history = [];
     this.input.addEventListener("keydown", function (event) {
@@ -663,6 +663,15 @@ var Terminal = function () {
       }
       this.writeOutput(tools.sum(rolls));
     }
+  }, {
+    key: "testCommand",
+    value: function testCommand(args) {
+      if (args[0] == "throw") {
+        var modalVDN = tools.makeDivVDN();
+        modalVDN.addText("h1", "LOL", "lead", "1rem");
+        tools.throwModal(modalVDN);
+      }
+    }
   }]);
 
   return Terminal;
@@ -698,6 +707,7 @@ function VDN(tagName) {
     root: {},
     attributes: {},
     children: [],
+    events: {},
     tag: tagName,
     setDim: function setDim(w, h) {
       this.style.width = w;
@@ -729,6 +739,9 @@ function VDN(tagName) {
       t.style.margin = "0px";
       this.addChild(t);
       return this;
+    },
+    bind: function bind(e, handler) {
+      this.events[e] = handler;
     },
     render: function render() {
       var e = document.createElement(this.tag);
@@ -763,7 +776,9 @@ function VDN(tagName) {
         }
       }
 
-      return e;
+      for (var _k3 in this.events) {
+        e.addEventListener(_k3, this.events[_k3]);
+      }return e;
     }
   };
 }
@@ -808,6 +823,33 @@ function sum(l) {
   });
 }
 
+function closeModal() {
+  var toDie = document.getElementById("thrownModal");
+  toDie.style.display = "none";
+  document.body.removeChild(toDie);
+  document.getElementById("filter").style.display = "none";
+}
+
+function throwModal(m) {
+  if (document.getElementById("thrownModal") === undefined) return;
+  document.getElementById("filter").style.display = "block";
+  var container = makeDivVDN({ className: "thrown-modal" });
+  container.root.id = "thrownModal";
+  var top = makeDivVDN({ className: "header" });
+  var bottom = makeDivVDN({ className: "content" });
+  var i = makeIconVDN("close", "close");
+  i.bind("click", closeModal);
+  i.root.className = "hoverable";
+  i.children[0].style.fontSize = "1.2rem";
+  i.attributes["data-balloon-pos"] = "left";
+  top.addChild(i);
+  bottom.addChild(m);
+  container.addChild(top);
+  container.addChild(bottom);
+  container.style.padding = "1rem";
+  document.body.appendChild(container.render());
+}
+
 module.exports = {
   VDN: VDN,
   makeDivVDN: makeDivVDN,
@@ -815,7 +857,9 @@ module.exports = {
   makeIconVDN: makeIconVDN,
   watched: watched,
   sum: sum,
-  getRndInteger: getRndInteger
+  getRndInteger: getRndInteger,
+  throwModal: throwModal,
+  closeModal: closeModal
 };
 
 /***/ }),
@@ -827,7 +871,7 @@ module.exports = {
 /*! exports provided: 0, 1, 2, 3, default */
 /***/ (function(module) {
 
-module.exports = [{"name":"Garfield","type":"NPC","race":"kitty","level":1,"class":"bard","stats":{"str":13,"dex":13,"con":11,"int":6,"wis":10,"chr":16},"baseStats":{"initative":null,"speed":null,"armourClass":null},"baseHP":20,"maxHP":20,"tempHP":0,"shown":true},{"name":"Kinky McKinkerson","type":"Player","race":"human","level":69,"class":"bard","stats":{"str":13,"dex":13,"con":11,"int":6,"wis":10,"chr":16},"baseStats":{"initative":null,"speed":null,"armourClass":null},"hp":20,"maxHP":20,"tempHP":0,"shown":true},{"name":"Daniel ShopKeep III","type":"NPC","race":"wood elf","level":10,"class":"bard","stats":{"str":13,"dex":13,"con":11,"int":6,"wis":10,"chr":16},"baseStats":{"initative":null,"speed":null,"armourClass":null},"hp":20,"maxHP":20,"tempHP":0,"shown":true},{"name":"evil motherfucker","type":"Enemy","race":"orc","level":9,"class":"bard","stats":{"str":13,"dex":13,"con":11,"int":6,"wis":10,"chr":16},"baseStats":{"initative":null,"speed":null,"armourClass":null},"hp":10,"maxHP":20,"tempHP":0,"shown":false}];
+module.exports = [{"name":"Garfield","type":"NPC","race":"kitty","level":1,"class":"bard","stats":{"str":13,"dex":13,"con":11,"int":6,"wis":10,"chr":16},"baseStats":{"initative":null,"speed":null,"armourClass":null},"baseHP":20,"maxHP":20,"tempHP":0,"shown":true},{"name":"Kinky McKinkerson","type":"Player","race":"human","level":69,"class":"bard","stats":{"str":13,"dex":13,"con":11,"int":6,"wis":10,"chr":16},"baseStats":{"initative":null,"speed":null,"armourClass":null},"baseHP":20,"maxHP":20,"tempHP":0,"shown":true},{"name":"Daniel ShopKeep III","type":"NPC","race":"wood elf","level":10,"class":"bard","stats":{"str":13,"dex":13,"con":11,"int":6,"wis":10,"chr":16},"baseStats":{"initative":null,"speed":null,"armourClass":null},"baseHP":20,"maxHP":20,"tempHP":0,"shown":true},{"name":"evil motherfucker","type":"Enemy","race":"orc","level":9,"class":"bard","stats":{"str":13,"dex":13,"con":11,"int":6,"wis":10,"chr":16},"baseStats":{"initative":null,"speed":null,"armourClass":null},"hp":10,"maxHP":20,"tempHP":0,"shown":false}];
 
 /***/ }),
 

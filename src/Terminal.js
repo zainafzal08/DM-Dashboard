@@ -8,7 +8,8 @@ class Terminal {
     this.commands = [
       [/roll (\d+) d(\d+)/,this.rollDice],
       [/r (\d+) d(\d+)/,this.rollDice],
-      [/clear/,this.clear]
+      [/clear/,this.clear],
+      [/test (.*)/,this.testCommand]
     ]
     this.pos = null;
     this.history = [];
@@ -87,7 +88,13 @@ class Terminal {
     }
     this.writeOutput(tools.sum(rolls));
   }
-
+  testCommand(args) {
+    if (args[0] == "throw") {
+      let modalVDN = tools.makeDivVDN();
+      modalVDN.addText("h1","LOL","lead","1rem");
+      tools.throwModal(modalVDN);
+    }
+  }
 }
 
 module.exports = Terminal;

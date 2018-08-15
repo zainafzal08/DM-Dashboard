@@ -48,6 +48,7 @@ Whenever you make changes to the source js you have to build `npm run build` and
   - edit character
   - roll check (button click just writes into terminal)
 - hot loading
+- modal animations / general animations
 - story live editing
   - update player colors (not arbitrary, iterate over current colour scheme shade wise)
 - commands

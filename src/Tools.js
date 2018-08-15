@@ -14,6 +14,7 @@ function VDN(tagName) {
     root:{},
     attributes: {},
     children: [],
+    events: {},
     tag: tagName,
     setDim(w,h) {
         this.style.width = w
@@ -41,16 +42,21 @@ function VDN(tagName) {
       this.addChild(t);
       return this;
     },
+    bind(e,handler){
+      this.events[e] = handler;
+    },
     render() {
-      let e = document.createElement(this.tag)
+      let e = document.createElement(this.tag);
       for (let k in this.attributes)
-        e.setAttribute(k,this.attributes[k])
+        e.setAttribute(k,this.attributes[k]);
       for (let k in this.style)
-        e.style[k]=this.style[k]
+        e.style[k]=this.style[k];
       for (let k in this.root)
-        e[k]=this.root[k]
+        e[k]=this.root[k];
       for (let child of this.children)
-        e.appendChild(child.render())
+        e.appendChild(child.render());
+      for (let k in this.events)
+        e.addEventListener(k,this.events[k]);
       return e
     }
   }
@@ -91,6 +97,33 @@ function sum(l) {
   return l.reduce((v,a)=>a+v)
 }
 
+function closeModal() {
+  let toDie = document.getElementById("thrownModal");
+  toDie.style.display = "none";
+  document.body.removeChild(toDie);
+  document.getElementById("filter").style.display = "none";
+}
+
+function throwModal(m) {
+  if (document.getElementById("thrownModal") === undefined) return;
+  document.getElementById("filter").style.display = "block";
+  let container = makeDivVDN({className: "thrown-modal"});
+  container.root.id = "thrownModal";
+  let top = makeDivVDN({className:"header"})
+  let bottom = makeDivVDN({className:"content"})
+  let i = makeIconVDN("close","close");
+  i.bind("click",closeModal);
+  i.root.className = "hoverable";
+  i.children[0].style.fontSize = "1.2rem"
+  i.attributes["data-balloon-pos"] = "left";
+  top.addChild(i);
+  bottom.addChild(m);
+  container.addChild(top);
+  container.addChild(bottom);
+  container.style.padding = "1rem";
+  document.body.appendChild(container.render());
+}
+
 module.exports = {
   VDN: VDN,
   makeDivVDN: makeDivVDN,
@@ -98,5 +131,7 @@ module.exports = {
   makeIconVDN: makeIconVDN,
   watched: watched,
   sum: sum,
-  getRndInteger: getRndInteger
+  getRndInteger: getRndInteger,
+  throwModal: throwModal,
+  closeModal: closeModal
 }
