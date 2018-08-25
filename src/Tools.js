@@ -16,39 +16,70 @@ function VDN(tagName) {
     children: [],
     events: {},
     tag: tagName,
+    classes: [],
     get first() {
       return this.children[0];
     },
     get second() {
       return this.children[1];
     },
-    setDim(w,h) {
-        this.style.width = w
-        this.style.height = h
-        return this
+    addClass(c) {
+      this.classes.push(c);
     },
-    setMargin({left,right,top,bottom} = {left: "0rem",right: "0rem",top: "0rem",bottom: "0rem"}) {
-      this.style.marginLeft = left
-      this.style.marginRight = right
-      this.style.marginTop = top
-      this.style.marginBottom = bottom
-      return this
+    flex(d) {
+      this.style.display = "flex";
+      this.style.flexDirection = d;
+      return this;
     },
+    align(a) {
+      this.style.alignItems = a;
+      return this;
+    },
+    justify(j) {
+      this.style.justifyContent = j;
+      return this;
+    },
+    fitH(h,m) {
+      if(m != undefined)
+        this.style.height = `calc(${h} - ( 2 * ${m} ))`;
+      else
+        this.style.height = h;
+      this.style.marginTop = this.style.marginBottom = m;
+      return this;
+    },
+    fitW(w,m){
+      if(m != undefined)
+        this.style.width = `calc(${w} - ( 2 * ${m} ))`;
+      else
+        this.style.width = w;
+      this.style.marginLeft = this.style.marginRight = m;
+      return this;
+    },
+    addIcon(i,tt) {
+      let a = VDN("a");
+      a.attributes["data-balloon"] = tt;
+      a.attributes["data-balloon-pos"] = "up";
+      let icon = VDN("i");
+      icon.root.className = "mdi mdi-"+i;
+      icon.style.color = "#777";
+      icon.style.fontSize = "0.9rem";
+      a.addChild(icon);
+      this.addChild(icon);
+      return this;
+    },
+    setText(t,s) {
+      if (s != undefined)
+        this.style.fontSize = s;
+      this.innerText = t;
+      return this;
+    }
     addChild(c) {
       this.children.push(c)
-      return this
-    },
-    addText(tag,text,className,size) {
-      let t = VDN(tag);
-      t.root.innerHTML = text;
-      t.style.fontSize = size;
-      t.root.className = className;
-      t.style.margin = "0px";
-      this.addChild(t);
       return this;
     },
     bind(e,handler){
       this.events[e] = handler;
+      return this;
     },
     render() {
       let e = document.createElement(this.tag);
@@ -62,38 +93,14 @@ function VDN(tagName) {
         e.appendChild(child.render());
       for (let k in this.events)
         e.addEventListener(k,this.events[k]);
+      for (let c in this.classes)
+        e.classList.add(c);
       return e
     }
   }
 }
 
-function makeDivVDN({className} = {className:""}) {
-  let d = VDN("div")
-  d.root.className = className
-  return d
-}
-
-function makeFlexVDN(dir,jc,ai) {
-  let div = VDN("div")
-  div.style.display = "flex"
-  div.style.flexDirection = dir
-  div.style.justifyContent = jc
-  div.style.alignItems = ai
-  return div
-}
-
-function makeIconVDN(i,tt) {
-  let a = VDN("a")
-  a.attributes["data-balloon"] = tt
-  a.attributes["data-balloon-pos"] = "up"
-  let icon = VDN("i")
-  icon.root.className = "mdi mdi-"+i
-  icon.style.color = "#777"
-  icon.style.fontSize = "0.9rem"
-  a.addChild(icon)
-  return a
-}
-
+// OTHER
 function getRndInteger(min, max) {
     max+=1;
     return Math.floor(Math.random() * (max - min) ) + min;
@@ -132,9 +139,6 @@ function throwModal(m) {
 
 module.exports = {
   VDN: VDN,
-  makeDivVDN: makeDivVDN,
-  makeFlexVDN: makeFlexVDN,
-  makeIconVDN: makeIconVDN,
   watched: watched,
   sum: sum,
   getRndInteger: getRndInteger,

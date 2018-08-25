@@ -15,6 +15,14 @@ class Character {
       wis:null,
       chr:null
     };
+    this.iconSet = {
+      "str":"sword",
+      "dex":"run-fast",
+      "con":"heart-half-full",
+      "int":"atom",
+      "wis":"earth",
+      "chr":"forum"
+    };
     this.baseStats = {
       initative: null,
       speed: null,
@@ -82,42 +90,48 @@ class Character {
   }
 
   makeBaseStats() {
-    let baseStats = tools.VDN("div")
+    return tools.VDN("div")
       .flex("row")
       .justify("space-around")
       .align("center")
       .fitH("100%","1rem")
       .fitV("15%")
-    return baseStats;
+      .addIcon("shield","AC");
   }
 
   makeCharacterHeader() {
-      let container = tools.makeFlexVDN("column","center","center");
-      container.setDim("100%","25%")
-      container.addText("h6",this.name,"","1rem");
-      let subtitle = `Level ${this.level} ${this.race} ${this.class}`;
-      container.addText("p",subtitle,"lead","0.8rem");
-      return container;
+    let subtitleText = `Level ${this.level} ${this.race} ${this.class}`;
+    let heading = VDN("h6")
+      .setText(this.name);
+    let subtitle = VDN("p")
+      .setText(subtitleText,"0.8rem")
+      .addClass("lead");
+    return tools.VDN("div")
+      .flex("column")
+      .justify("center")
+      .align("center")
+      .fitH("100%")
+      .fitV("25%")
+      .addChild(heading)
+      .addChild(subtitle);
   }
 
   makeCharacterStats(terminal) {
-    let icons = tools.makeFlexVDN("row","space-between","center");
-    icons.setDim("calc(100% - 2rem)","26%");
-    icons.setMargin({top:"1%",bottom:"0%",left:"1rem",right:"1rem"});
-    let stats = {
-      "str":"sword",
-      "dex":"run-fast",
-      "con":"heart-half-full",
-      "int":"atom",
-      "wis":"earth",
-      "chr":"forum"
-    }
-    Object.keys(stats).map((x)=>{
-      let cs = this.stats[x];
-      let child = tools.makeIconVDN(stats[x],`${x}: ${cs}`);
-      child.bind("click",()=>terminal.autoType(`${x} check for [${this.name}]`))
-      icons.addChild(child);
+    let icons = tools.VDN("div")
+      .flex("row")
+      .justify("space-between")
+      .align("center")
+      .fitH("100%","2rem")
+      .fitV("23%","1%");
+
+    Object.keys(this.iconSet).map((x)=>{
+      icons.addIcon(this.iconSet[x],`${x}: ${this.stats[x]}`)
+        .last
+        .bind("click",()=>{
+          terminal.autoType(`${x} check for [${this.name}]`
+          }));
     })
+
     let mods = tools.makeFlexVDN("row","space-between","center");
     mods.setDim("calc(100% - 2rem)","26%");
     mods.setMargin({top:"1%",left:"1rem",right:"1rem"});
