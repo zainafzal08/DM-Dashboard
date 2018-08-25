@@ -5,11 +5,13 @@ class Terminal {
     this.output = outputAnchor
     this.input = inputAnchor
     this.scrollPos = 0;
+    this.playersDash = null;
     this.commands = [
       [/roll (\d+) d(\d+)/,this.rollDice],
       [/r (\d+) d(\d+)/,this.rollDice],
       [/clear/,this.clear],
-      [/test (.*)/,this.testCommand]
+      [/test (.*)/,this.testCommand],
+      [/(\w+) check for \[([^\[\]]+)\]/, this.statCheck]
     ]
     this.pos = null;
     this.history = [];
@@ -71,8 +73,30 @@ class Terminal {
     if (m) m[1].bind(this)(m[0].slice(1));
     this.input.value = "";
   }
-
+  autoType(execString) {
+    this.input.value = execString;
+    this.execute()
+  }
   // commands
+
+  statCheck(args) {
+    let stat = args[0];
+    let player = args[1];
+    let character = this.playersDash.getCharacter(player);
+    if (!character) {
+      this.writeError(`Unknown Player '${player}'`);
+      return;
+    }
+    let base = tools.getRndInteger(1,20);
+    let abilityMod = character.abilityCheck(stat);
+    let saveMod = character.savingThrow(stat);
+    let abilityRoll = base + abilityMod;
+    let saveRoll = base + saveMod;
+    if (abilityMod >= 0) abilityMod = `+${abilityMod}`;
+    if (saveMod >= 0) saveMod = `+${saveMod}`;
+    this.writeOutput(`${player} ${stat} ability check:  ${abilityRoll} (${base}${abilityMod})`);
+    this.writeOutput(`${player} ${stat} saving throw:  ${saveRoll} (${base}${saveMod})`);
+  }
   clear() {
     this.output.innerHTML = "";
     this.scrollPos = 0;
@@ -81,13 +105,14 @@ class Terminal {
   rollDice(args) {
     let n = parseInt(args[0]);
     let d = parseInt(args[1]);
-    let rolls = Array(n).fill(0).map((x)=>tools.getRndInteger(1,d+1));
+    let rolls = Array(n).fill(0).map((x)=>tools.getRndInteger(1,d));
     if(n > 1) {
        this.writeOutput(`${tools.sum(rolls)} (${rolls.join("+")})`);
        return;
     }
     this.writeOutput(tools.sum(rolls));
   }
+  
   testCommand(args) {
     if (args[0] == "throw") {
       let modalVDN = tools.makeDivVDN();

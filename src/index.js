@@ -9,6 +9,7 @@ const characters = require('./data/test_characters.json')
 // globals
 let story = null;
 let terminal = null;
+let playersDash = null;
 
 function storyDriver(){
   let content = document.getElementById("story-content");
@@ -24,20 +25,22 @@ function storyDriver(){
 function terminalDriver(){
   let input = document.getElementById("terminal-input");
   let output = document.getElementById("terminal-output");
-  let terminal = new Terminal(input,output);
+  terminal = new Terminal(input,output);
 }
 
 function playersDashDriver(){
   let cards = ['character-left','character-middle','character-right'];
   cards = cards.map((x)=>document.getElementById(x));
-  let playersDash = new PlayersDash(cards);
+  // TODO: remove cross dependency (kinda ruins encapsulation)
+  playersDash = new PlayersDash(cards,terminal);
+  terminal.playersDash = playersDash;
   characters.map((x)=>{
     let c = new Character();
     c.buildFromJson(x);
     playersDash.newCharacter(c);
   });
 }
-
+// init function
 function init() {
   storyDriver();
   terminalDriver();

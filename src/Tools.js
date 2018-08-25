@@ -16,12 +16,17 @@ function VDN(tagName) {
     children: [],
     events: {},
     tag: tagName,
+    get first() {
+      return this.children[0];
+    },
+    get second() {
+      return this.children[1];
+    },
     setDim(w,h) {
         this.style.width = w
         this.style.height = h
         return this
     },
-
     setMargin({left,right,top,bottom} = {left: "0rem",right: "0rem",top: "0rem",bottom: "0rem"}) {
       this.style.marginLeft = left
       this.style.marginRight = right
@@ -90,6 +95,7 @@ function makeIconVDN(i,tt) {
 }
 
 function getRndInteger(min, max) {
+    max+=1;
     return Math.floor(Math.random() * (max - min) ) + min;
 }
 

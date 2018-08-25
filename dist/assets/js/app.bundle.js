@@ -102,6 +102,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var tools = __webpack_require__(/*! ./Tools */ "./src/Tools.js");
+
 var Character = function () {
   function Character() {
     _classCallCheck(this, Character);
@@ -128,6 +130,13 @@ var Character = function () {
     this.maxHP = null;
     this.tempHP = 0;
     this.shown = false;
+    this.colors = {
+      "HP": function HP(hp) {
+        if (hp >= 50) return "bg-success";
+        if (hp >= 20) return "bg-warning";
+        return "bg-danger";
+      }
+    };
   }
 
   _createClass(Character, [{
@@ -159,6 +168,16 @@ var Character = function () {
       }
     }
   }, {
+    key: "abilityCheck",
+    value: function abilityCheck(stat) {
+      return this.modifiers[stat];
+    }
+  }, {
+    key: "savingThrow",
+    value: function savingThrow(stat) {
+      return this.modifiers[stat];
+    }
+  }, {
     key: "giveTempHP",
     value: function giveTempHP(s) {
       if (s < 0) s = 0;
@@ -170,6 +189,148 @@ var Character = function () {
     value: function clearState() {
       this.tempHP = 0;
       if (this.baseHP > this.maxHP) this.baseHP = this.maxHP;
+    }
+  }, {
+    key: "makeBaseStats",
+    value: function makeBaseStats() {
+      var baseStats = tools.makeFlexVDN("row", "space-around", "center");
+      baseStats.setDim("calc(100% - 2rem)", "15%");
+      baseStats.setMargin({ left: "1rem", right: "1rem" });
+      baseStats.addChild(tools.makeIconVDN("shield", "AC"));
+      return baseStats;
+    }
+  }, {
+    key: "makeCharacterHeader",
+    value: function makeCharacterHeader() {
+      var container = tools.makeFlexVDN("column", "center", "center");
+      container.setDim("100%", "25%");
+      container.addText("h6", this.name, "", "1rem");
+      var subtitle = "Level " + this.level + " " + this.race + " " + this.class;
+      container.addText("p", subtitle, "lead", "0.8rem");
+      return container;
+    }
+  }, {
+    key: "makeCharacterStats",
+    value: function makeCharacterStats(terminal) {
+      var _this = this;
+
+      var icons = tools.makeFlexVDN("row", "space-between", "center");
+      icons.setDim("calc(100% - 2rem)", "26%");
+      icons.setMargin({ top: "1%", bottom: "0%", left: "1rem", right: "1rem" });
+      var stats = {
+        "str": "sword",
+        "dex": "run-fast",
+        "con": "heart-half-full",
+        "int": "atom",
+        "wis": "earth",
+        "chr": "forum"
+      };
+      Object.keys(stats).map(function (x) {
+        var cs = _this.stats[x];
+        var child = tools.makeIconVDN(stats[x], x + ": " + cs);
+        child.bind("click", function () {
+          return terminal.autoType(x + " check for [" + _this.name + "]");
+        });
+        icons.addChild(child);
+      });
+      var mods = tools.makeFlexVDN("row", "space-between", "center");
+      mods.setDim("calc(100% - 2rem)", "26%");
+      mods.setMargin({ top: "1%", left: "1rem", right: "1rem" });
+      Object.keys(stats).map(function (x) {
+        var modifier = _this.modifiers[x];
+        var modText = null;
+        if (modifier > 0) modText = tools.makeDivVDN().addText("p", "+" + modifier, "lead faint text-success", "0.7rem");else if (modifier < 0) modText = tools.makeDivVDN().addText("p", "" + modifier, "lead faint text-danger", "0.7rem");else modText = tools.makeDivVDN().addText("p", "" + modifier, "lead faint", "0.7rem");
+        mods.addChild(modText);
+      });
+      var container = tools.makeFlexVDN("column", "center", "center");
+      container.setMargin({ top: "2%", left: "1rem", right: "1rem" });
+      container.addChild(icons);
+      container.addChild(mods);
+      container.style.borderTop = "solid #EBEBEB 2px";
+      return container;
+    }
+  }, {
+    key: "makeCharacterHP",
+    value: function makeCharacterHP() {
+      var p = this.HP.percentage;
+      var color = this.colors.HP(p);
+      var container = tools.makeDivVDN().setDim("calc(100% - 2rem)", "0.3rem");
+      container.setMargin({ left: "1rem", right: "1rem" });
+      var pbc = tools.makeDivVDN({ className: "progress" });
+      pbc.setDim("100%", "100%");
+      pbc.addChild(tools.makeDivVDN({ className: "progress-bar " + color }));
+      pbc.children[0].style.width = p + "%";
+      pbc.children[0].style.height = "100%";
+      container.addChild(pbc);
+      return container;
+    }
+  }, {
+    key: "makeCharacterSubHeading",
+    value: function makeCharacterSubHeading(t) {
+      var container = tools.makeDivVDN();
+      container.addText("p", t, "lead", "0.8rem");
+      container.setMargin({ left: "1.5rem", top: "1rem", bottom: "0.4rem" });
+      return container;
+    }
+  }, {
+    key: "throwFull",
+    value: function throwFull() {
+      var container = tools.makeFlexVDN("column", "center", "center");
+      container.setDim("100%", "100%");
+
+      var subtitle = "Level " + this.level + " " + this.race + " " + this.class;
+
+      var heading = tools.makeFlexVDN("row", "center", "center");
+      heading.setDim("calc(100% - 2rem)", "4rem");
+      heading.setMargin({ left: "1rem", right: "1rem", bottom: "1rem" });
+      heading.addChild(tools.makeDivVDN());
+      heading.first.innerText = this.name;
+      heading.first.style["font-size"] = "2rem";
+      heading.addText("p", subtitle, "lead", "1rem");
+      container.addChild(heading);
+
+      var stats = this.makeCharacterStats();
+      stats.style.width = "calc(100% - 2rem)";
+      stats.children[0].children.map(function (x) {
+        x.children[0].style["font-size"] = "1.2rem";
+      });
+      stats.children[1].children.map(function (x) {
+        x.children[0].style["font-size"] = "1rem";
+      });
+      stats.setMargin({ left: "1rem", right: "1rem" });
+      stats.style.borderBottom = "#EBEBEB 2px solid";
+      stats.children[1].style.marginBottom = "1%";
+
+      container.addChild(stats);
+      tools.throwModal(container);
+    }
+  }, {
+    key: "makeCharacterActionbar",
+    value: function makeCharacterActionbar() {
+      var _this2 = this;
+
+      var container = tools.makeFlexVDN("row", "flex-end", "center");
+      container.setMargin({ left: "0.5rem", right: "0.5rem" });
+      container.setDim("calc(100% - 1rem)", "1.5rem");
+      var child = tools.makeIconVDN("arrow-expand", "expand");
+      child.attributes["data-balloon-pos"] = "left";
+      child.bind("click", function () {
+        return _this2.throwFull();
+      });
+      container.addChild(child);
+      return container;
+    }
+  }, {
+    key: "render",
+    value: function render(terminal) {
+      var root = tools.VDN("div");
+      root.addChild(this.makeCharacterActionbar());
+      root.addChild(this.makeCharacterHeader());
+      root.addChild(this.makeBaseStats());
+      root.addChild(this.makeCharacterStats(terminal));
+      root.addChild(this.makeCharacterSubHeading("HP"));
+      root.addChild(this.makeCharacterHP());
+      return root.render();
     }
   }, {
     key: "HP",
@@ -226,20 +387,16 @@ var Character = __webpack_require__(/*! ./Character */ "./src/Character.js");
 var tools = __webpack_require__(/*! ./Tools */ "./src/Tools.js");
 
 var PlayersDash = function () {
-  function PlayersDash(anchors) {
+  function PlayersDash(anchors, terminal) {
     _classCallCheck(this, PlayersDash);
 
     this.cards = anchors;
     this.characterList = [];
+    this.terminal = terminal;
     this.colors = {
       "NPC": "var(--info)",
       "Player": "var(--success)",
-      "Enemy": "var(--danger)",
-      "HP": function HP(hp) {
-        if (hp >= 50) return "bg-success";
-        if (hp >= 20) return "bg-warning";
-        return "bg-danger";
-      }
+      "Enemy": "var(--danger)"
     };
   }
 
@@ -280,17 +437,6 @@ var PlayersDash = function () {
       this.render();
     }
   }, {
-    key: 'makeCharacter',
-    value: function makeCharacter(c) {
-      var root = tools.VDN("div");
-      root.addChild(this.makeCharacterHeader(c));
-      root.addChild(this.makeBaseStats(c));
-      root.addChild(this.makeCharacterStats(c));
-      root.addChild(this.makeCharacterSubHeading("HP"));
-      root.addChild(this.makeCharacterHP(c));
-      return root;
-    }
-  }, {
     key: 'render',
     value: function render() {
       var _this = this;
@@ -311,7 +457,7 @@ var PlayersDash = function () {
       this.cards.map(function (card, i) {
         if (i <= characterSet.length - 1) {
           card.style.borderTopColor = _this.colors[characterSet[i].type];
-          card.appendChild(_this.makeCharacter(characterSet[i]).render());
+          card.appendChild(characterSet[i].render(_this.terminal));
         }
       });
 
@@ -319,82 +465,6 @@ var PlayersDash = function () {
       this.cards.map(function (x) {
         return x.style.display = "block";
       });
-    }
-  }, {
-    key: 'makeBaseStats',
-    value: function makeBaseStats(character) {
-      var baseStats = tools.makeFlexVDN("row", "space-around", "center");
-      baseStats.setDim("calc(100% - 2rem)", "15%");
-      baseStats.setMargin({ left: "1rem", right: "1rem" });
-      baseStats.addChild(tools.makeIconVDN("shield", "AC"));
-      return baseStats;
-    }
-  }, {
-    key: 'makeCharacterHeader',
-    value: function makeCharacterHeader(character) {
-      var container = tools.makeFlexVDN("column", "center", "center");
-      container.setDim("100%", "25%").setMargin({ top: "5%" });
-      container.addText("h6", character.name, "", "1rem");
-      var subtitle = 'Level ' + character.level + ' ' + character.race + ' ' + character.class;
-      container.addText("p", subtitle, "lead", "0.8rem");
-      return container;
-    }
-  }, {
-    key: 'makeCharacterStats',
-    value: function makeCharacterStats(character) {
-      var icons = tools.makeFlexVDN("row", "space-between", "center");
-      icons.setDim("calc(100% - 2rem)", "26%");
-      icons.setMargin({ top: "1%", bottom: "0%", left: "1rem", right: "1rem" });
-      var stats = {
-        "str": "sword",
-        "dex": "run-fast",
-        "con": "heart-half-full",
-        "int": "atom",
-        "wis": "earth",
-        "chr": "forum"
-      };
-      Object.keys(stats).map(function (x) {
-        var cs = character.stats[x];
-        icons.addChild(tools.makeIconVDN(stats[x], x + ': ' + cs));
-      });
-      var mods = tools.makeFlexVDN("row", "space-between", "center");
-      mods.setDim("calc(100% - 2rem)", "26%");
-      mods.setMargin({ top: "1%", left: "1rem", right: "1rem" });
-      Object.keys(stats).map(function (x) {
-        var modifier = character.modifiers[x];
-        var modText = null;
-        if (modifier > 0) modText = tools.makeDivVDN().addText("p", '+' + modifier, "lead faint text-success", "0.7rem");else if (modifier < 0) modText = tools.makeDivVDN().addText("p", '' + modifier, "lead faint text-danger", "0.7rem");else modText = tools.makeDivVDN().addText("p", '' + modifier, "lead faint", "0.7rem");
-        mods.addChild(modText);
-      });
-      var container = tools.makeFlexVDN("column", "center", "center");
-      container.setMargin({ top: "2%", left: "1rem", right: "1rem" });
-      container.addChild(icons);
-      container.addChild(mods);
-      container.style.borderTop = "solid #EBEBEB 2px";
-      return container;
-    }
-  }, {
-    key: 'makeCharacterHP',
-    value: function makeCharacterHP(character) {
-      var p = character.HP.percentage;
-      var color = this.colors.HP(p);
-      var container = tools.makeDivVDN().setDim("calc(100% - 2rem)", "0.3rem");
-      container.setMargin({ left: "1rem", right: "1rem" });
-      var pbc = tools.makeDivVDN({ className: "progress" });
-      pbc.setDim("100%", "100%");
-      pbc.addChild(tools.makeDivVDN({ className: 'progress-bar ' + color }));
-      pbc.children[0].style.width = p + "%";
-      pbc.children[0].style.height = "100%";
-      container.addChild(pbc);
-      return container;
-    }
-  }, {
-    key: 'makeCharacterSubHeading',
-    value: function makeCharacterSubHeading(t) {
-      var container = tools.makeDivVDN();
-      container.addText("p", t, "lead", "0.8rem");
-      container.setMargin({ left: "1.5rem", top: "1rem", bottom: "0.4rem" });
-      return container;
     }
   }]);
 
@@ -569,7 +639,8 @@ var Terminal = function () {
     this.output = outputAnchor;
     this.input = inputAnchor;
     this.scrollPos = 0;
-    this.commands = [[/roll (\d+) d(\d+)/, this.rollDice], [/r (\d+) d(\d+)/, this.rollDice], [/clear/, this.clear], [/test (.*)/, this.testCommand]];
+    this.playersDash = null;
+    this.commands = [[/roll (\d+) d(\d+)/, this.rollDice], [/r (\d+) d(\d+)/, this.rollDice], [/clear/, this.clear], [/test (.*)/, this.testCommand], [/(\w+) check for \[([^\[\]]+)\]/, this.statCheck]];
     this.pos = null;
     this.history = [];
     this.input.addEventListener("keydown", function (event) {
@@ -640,9 +711,34 @@ var Terminal = function () {
       if (m) m[1].bind(this)(m[0].slice(1));
       this.input.value = "";
     }
-
+  }, {
+    key: "autoType",
+    value: function autoType(execString) {
+      this.input.value = execString;
+      this.execute();
+    }
     // commands
 
+  }, {
+    key: "statCheck",
+    value: function statCheck(args) {
+      var stat = args[0];
+      var player = args[1];
+      var character = this.playersDash.getCharacter(player);
+      if (!character) {
+        this.writeError("Unknown Player '" + player + "'");
+        return;
+      }
+      var base = tools.getRndInteger(1, 20);
+      var abilityMod = character.abilityCheck(stat);
+      var saveMod = character.savingThrow(stat);
+      var abilityRoll = base + abilityMod;
+      var saveRoll = base + saveMod;
+      if (abilityMod >= 0) abilityMod = "+" + abilityMod;
+      if (saveMod >= 0) saveMod = "+" + saveMod;
+      this.writeOutput(player + " " + stat + " ability check:  " + abilityRoll + " (" + base + abilityMod + ")");
+      this.writeOutput(player + " " + stat + " saving throw:  " + saveRoll + " (" + base + saveMod + ")");
+    }
   }, {
     key: "clear",
     value: function clear() {
@@ -655,7 +751,7 @@ var Terminal = function () {
       var n = parseInt(args[0]);
       var d = parseInt(args[1]);
       var rolls = Array(n).fill(0).map(function (x) {
-        return tools.getRndInteger(1, d + 1);
+        return tools.getRndInteger(1, d);
       });
       if (n > 1) {
         this.writeOutput(tools.sum(rolls) + " (" + rolls.join("+") + ")");
@@ -709,6 +805,12 @@ function VDN(tagName) {
     children: [],
     events: {},
     tag: tagName,
+    get first() {
+      return this.children[0];
+    },
+    get second() {
+      return this.children[1];
+    },
     setDim: function setDim(w, h) {
       this.style.width = w;
       this.style.height = h;
@@ -814,6 +916,7 @@ function makeIconVDN(i, tt) {
 }
 
 function getRndInteger(min, max) {
+  max += 1;
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
@@ -907,6 +1010,7 @@ var characters = __webpack_require__(/*! ./data/test_characters.json */ "./src/d
 // globals
 var story = null;
 var terminal = null;
+var playersDash = null;
 
 function storyDriver() {
   var content = document.getElementById("story-content");
@@ -926,7 +1030,7 @@ function storyDriver() {
 function terminalDriver() {
   var input = document.getElementById("terminal-input");
   var output = document.getElementById("terminal-output");
-  var terminal = new Terminal(input, output);
+  terminal = new Terminal(input, output);
 }
 
 function playersDashDriver() {
@@ -934,18 +1038,29 @@ function playersDashDriver() {
   cards = cards.map(function (x) {
     return document.getElementById(x);
   });
-  var playersDash = new PlayersDash(cards);
+  // TODO: remove cross dependency (kinda ruins encapsulation)
+  playersDash = new PlayersDash(cards, terminal);
+  terminal.playersDash = playersDash;
   characters.map(function (x) {
     var c = new Character();
     c.buildFromJson(x);
     playersDash.newCharacter(c);
   });
 }
-
+// init
 function init() {
   storyDriver();
   terminalDriver();
   playersDashDriver();
+  var dev = true;
+
+  // hot reloading
+  if (dev) {
+    var socket = io.connect('http://127.0.0.1:5000');
+    socket.on('message', function () {
+      console.log("TIME FOR A CHEEKY RELOAD LADS");
+    });
+  }
 }
 
 window.onload = init;

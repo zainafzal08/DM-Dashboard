@@ -46,7 +46,7 @@ Whenever you make changes to the source js you have to build `npm run build` and
   - swap out
   - full character cards
   - edit character
-  - roll check (button click just writes into terminal)
+  - fix up save bs ability check modifier logic in character
 - hot loading
 - modal animations / general animations
 - story live editing
@@ -62,6 +62,8 @@ Whenever you make changes to the source js you have to build `npm run build` and
 - new campaign option + user state
   - honestly stick with username + password -> flask session cookie
   - oauth is too complex for a beta and it's always annoying to get working
+- remove cross dependency (kinda ruins encapsulation) for playerDash <-> terminal
+
 
 ### Goal State: Playing
 ##### Adventure Phase
